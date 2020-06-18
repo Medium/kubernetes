@@ -1,11 +1,9 @@
 package test
 
 import (
-	testify "github.com/stretchr/testify/assert"
 	core "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/runtime"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"testing"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
 var DefaultScheme = runtime.NewScheme()
@@ -17,15 +15,9 @@ func RegisterForType(obj runtime.Object, fn CompareFn) {
 
 func init() {
 	core.AddToScheme(DefaultScheme)
-	RegisterForType(&core.Secret{}, func(t *testing.T, a, b runtime.Object){
-		assert := testify.New(t)
-		expected, actual := a.(*core.Secret).DeepCopy(), b.(*core.Secret)
-		ObjectCompare_ObjectMeta(t, expected.ObjectMeta, actual.ObjectMeta)
-	})
 }
 
-func ObjectCompare_ObjectMeta(t *testing.T, expected, actual meta.ObjectMeta) {
-	assert := testify.New(t)
+func Sanitize_ObjectMeta(expected, actual meta.ObjectMeta) meta.ObjectMeta{
 	e := expected.DeepCopy()
 	e.UID = actual.UID
 	e.CreationTimestamp = actual.CreationTimestamp
@@ -34,5 +26,5 @@ func ObjectCompare_ObjectMeta(t *testing.T, expected, actual meta.ObjectMeta) {
 		e.DeletionTimestamp = actual.DeletionTimestamp
 	}
 	e.Generation = actual.Generation
-	assert.EqualValues(e, actual)
+	return *e
 }

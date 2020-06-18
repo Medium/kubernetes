@@ -1,7 +1,8 @@
-package test
+package v1
 
 import (
 	"context"
+	"go.medium.engineering/kubernetes/pkg/test"
 	core "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -21,9 +22,9 @@ var fixtures = []runtime.Object{
 func TestMatchComparator(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(1) * time.Second)
 	defer cancel()
-	cli := fake.NewFakeClientWithScheme(DefaultScheme, fixtures...)
-	AssertMatch(ctx, t, cli, fixtures[0])
+	cli := fake.NewFakeClientWithScheme(test.DefaultScheme, fixtures...)
+	test.AssertMatch(ctx, t, cli, fixtures[0])
 	s := *fixtures[0].(*core.Secret)
 	s.Name = "baba"
-	AssertNotFound(ctx, t, cli, &s)
+	test.AssertNotFound(ctx, t, cli, &s)
 }
