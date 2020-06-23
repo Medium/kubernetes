@@ -19,7 +19,7 @@ var fixtures = []runtime.Object{
 	},
 }
 
-func TestMatchComparator(t *testing.T) {
+func TestMatch(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(1) * time.Second)
 	defer cancel()
 	cli := fake.NewFakeClientWithScheme(test.DefaultScheme, fixtures...)

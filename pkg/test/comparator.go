@@ -10,19 +10,24 @@ import (
 	"testing"
 )
 
-type CompareFn func(t *testing.T, a, b runtime.Object)
+type AssertFn func(t *testing.T, a, b runtime.Object)
+
+type TypedAsserts struct {
+	Match   AssertFn
+	NoMatch AssertFn
+}
 
 type Comparator struct {
-	compareFns map[schema.GroupVersionKind]CompareFn
+	typedAsserts map[schema.GroupVersionKind]TypedAsserts
 	scheme *runtime.Scheme
 }
 
-func (c *Comparator) RegisterForType(obj runtime.Object, fn CompareFn) {
+func (c *Comparator) RegisterForType(obj runtime.Object, asserts TypedAsserts) {
 	gvk := kinds.Identify(c.scheme, obj)
 	if gvk.Kind == "" {
 		panic("can't identify type")
 	}
-	c.compareFns[gvk] = fn
+	c.typedAsserts[gvk] = asserts
 }
 
 func (c *Comparator) AssertMatch(
@@ -39,14 +44,14 @@ func (c *Comparator) AssertMatch(
 	assert.NoError(cli.Get(ctx, key, actual))
 	gvk := kinds.Identify(c.scheme, expected)
 	assert.NotEmpty(gvk.Kind, "Can't resolve expected value kind")
-	fn, ok := c.compareFns[gvk]
+	asserts, ok := c.typedAsserts[gvk]
 	assert.True(ok, "Can't find comparator for kind", gvk)
-	fn(t, expected, actual)
+	asserts.Match(t, expected, actual)
 }
 
 func NewComparator(scheme *runtime.Scheme) *Comparator {
 	return &Comparator{
-		compareFns: map[schema.GroupVersionKind]CompareFn{},
+		typedAsserts: map[schema.GroupVersionKind]TypedAsserts{},
 		scheme: scheme,
 	}
 }

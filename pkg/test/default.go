@@ -9,15 +9,15 @@ import (
 var DefaultScheme = runtime.NewScheme()
 var DefaultComparator = NewComparator(DefaultScheme)
 
-func RegisterForType(obj runtime.Object, fn CompareFn) {
-	DefaultComparator.RegisterForType(obj, fn)
+func RegisterForType(obj runtime.Object, asserts TypedAsserts) {
+	DefaultComparator.RegisterForType(obj, asserts)
 }
 
 func init() {
 	core.AddToScheme(DefaultScheme)
 }
 
-func Sanitize_ObjectMeta(expected, actual meta.ObjectMeta) meta.ObjectMeta{
+func Assimilate_ObjectMeta(expected, actual meta.ObjectMeta) meta.ObjectMeta{
 	e := expected.DeepCopy()
 	e.UID = actual.UID
 	e.CreationTimestamp = actual.CreationTimestamp

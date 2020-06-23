@@ -1,7 +1,7 @@
 package main
 
 import (
-	"go.medium.engineering/kubernetes/cmd/comparator-gen/generators"
+	"go.medium.engineering/kubernetes/cmd/matcher-gen/generators"
 	"k8s.io/gengo/args"
 
 	"k8s.io/klog/v2"
@@ -12,7 +12,7 @@ func main() {
 	arguments := args.Default()
 
 	// Override defaults.
-	arguments.OutputFileBaseName = "zz_generated.comparator"
+	arguments.OutputFileBaseName = "zz_generated.matcher"
 
 	// Run it.
 	if err := arguments.Execute(
