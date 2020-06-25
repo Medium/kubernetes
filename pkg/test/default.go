@@ -1,7 +1,6 @@
 package test
 
 import (
-	core "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 )
@@ -11,10 +10,6 @@ var DefaultComparator = NewComparator(DefaultScheme)
 
 func RegisterForType(obj runtime.Object, asserts TypedAsserts) {
 	DefaultComparator.RegisterForType(obj, asserts)
-}
-
-func init() {
-	core.AddToScheme(DefaultScheme)
 }
 
 func Assimilate_ObjectMeta(expected, actual meta.ObjectMeta) meta.ObjectMeta{

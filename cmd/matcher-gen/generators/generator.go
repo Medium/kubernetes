@@ -91,12 +91,15 @@ func (g *gen) Init(c *generator.Context, w io.Writer) error {
 		"testify": c.Universe.Type(types.Name{Package:"github.com/stretchr/testify/assert", Name:"New"}),
 		"comparator": c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "Comparator"}),
 		"defaultComparator": c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "DefaultComparator"}),
+		"defaultScheme": c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "DefaultScheme"}),
 		"object": c.Universe.Type(types.Name{Package: "k8s.io/apimachinery/pkg/runtime", Name: "Object"}),
 		"assimilateObjectMeta": c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "Assimilate_ObjectMeta"}),
 		"typedAsserts": c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "TypedAsserts"}),
+		"addToScheme": c.Universe.Type(types.Name{Package: g.typesPackage, Name: "AddToScheme"}),
 	}
 
 	sw.Do("func init() {\n", nil)
+	sw.Do("if err := $.addToScheme|raw$($.defaultScheme|raw$); err != nil { panic(err) }\n", args)
 	sw.Do("RegisterAsserts($.defaultComparator|raw$)\n", args)
 	sw.Do("}\n\n", nil)
 

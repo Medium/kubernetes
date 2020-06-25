@@ -10,6 +10,9 @@ import (
 )
 
 func init() {
+	if err := v1.AddToScheme(test.DefaultScheme); err != nil {
+		panic(err)
+	}
 	RegisterAsserts(test.DefaultComparator)
 }
 
@@ -23,30 +26,12 @@ func RegisterAsserts(comparator *test.Comparator) {
 		},
 	})
 
-	comparator.RegisterForType(&v1.ComponentStatus{}, test.TypedAsserts{
+	comparator.RegisterForType(&v1.Binding{}, test.TypedAsserts{
 		Match: func(t *testing.T, a, b runtime.Object) {
-			Match_ComponentStatus(t, a.(*v1.ComponentStatus), b.(*v1.ComponentStatus))
+			Match_Binding(t, a.(*v1.Binding), b.(*v1.Binding))
 		},
 		NoMatch: func(t *testing.T, a, b runtime.Object) {
-			NoMatch_ComponentStatus(t, a.(*v1.ComponentStatus), b.(*v1.ComponentStatus))
-		},
-	})
-
-	comparator.RegisterForType(&v1.Namespace{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
-			Match_Namespace(t, a.(*v1.Namespace), b.(*v1.Namespace))
-		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
-			NoMatch_Namespace(t, a.(*v1.Namespace), b.(*v1.Namespace))
-		},
-	})
-
-	comparator.RegisterForType(&v1.RangeAllocation{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
-			Match_RangeAllocation(t, a.(*v1.RangeAllocation), b.(*v1.RangeAllocation))
-		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
-			NoMatch_RangeAllocation(t, a.(*v1.RangeAllocation), b.(*v1.RangeAllocation))
+			NoMatch_Binding(t, a.(*v1.Binding), b.(*v1.Binding))
 		},
 	})
 
@@ -59,39 +44,12 @@ func RegisterAsserts(comparator *test.Comparator) {
 		},
 	})
 
-	comparator.RegisterForType(&v1.Pod{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
-			Match_Pod(t, a.(*v1.Pod), b.(*v1.Pod))
-		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
-			NoMatch_Pod(t, a.(*v1.Pod), b.(*v1.Pod))
-		},
-	})
-
 	comparator.RegisterForType(&v1.Endpoints{}, test.TypedAsserts{
 		Match: func(t *testing.T, a, b runtime.Object) {
 			Match_Endpoints(t, a.(*v1.Endpoints), b.(*v1.Endpoints))
 		},
 		NoMatch: func(t *testing.T, a, b runtime.Object) {
 			NoMatch_Endpoints(t, a.(*v1.Endpoints), b.(*v1.Endpoints))
-		},
-	})
-
-	comparator.RegisterForType(&v1.Secret{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
-			Match_Secret(t, a.(*v1.Secret), b.(*v1.Secret))
-		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
-			NoMatch_Secret(t, a.(*v1.Secret), b.(*v1.Secret))
-		},
-	})
-
-	comparator.RegisterForType(&v1.ReplicationController{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
-			Match_ReplicationController(t, a.(*v1.ReplicationController), b.(*v1.ReplicationController))
-		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
-			NoMatch_ReplicationController(t, a.(*v1.ReplicationController), b.(*v1.ReplicationController))
 		},
 	})
 
@@ -113,6 +71,15 @@ func RegisterAsserts(comparator *test.Comparator) {
 		},
 	})
 
+	comparator.RegisterForType(&v1.Secret{}, test.TypedAsserts{
+		Match: func(t *testing.T, a, b runtime.Object) {
+			Match_Secret(t, a.(*v1.Secret), b.(*v1.Secret))
+		},
+		NoMatch: func(t *testing.T, a, b runtime.Object) {
+			NoMatch_Secret(t, a.(*v1.Secret), b.(*v1.Secret))
+		},
+	})
+
 	comparator.RegisterForType(&v1.ConfigMap{}, test.TypedAsserts{
 		Match: func(t *testing.T, a, b runtime.Object) {
 			Match_ConfigMap(t, a.(*v1.ConfigMap), b.(*v1.ConfigMap))
@@ -131,39 +98,30 @@ func RegisterAsserts(comparator *test.Comparator) {
 		},
 	})
 
-	comparator.RegisterForType(&v1.EphemeralContainers{}, test.TypedAsserts{
+	comparator.RegisterForType(&v1.ResourceQuota{}, test.TypedAsserts{
 		Match: func(t *testing.T, a, b runtime.Object) {
-			Match_EphemeralContainers(t, a.(*v1.EphemeralContainers), b.(*v1.EphemeralContainers))
+			Match_ResourceQuota(t, a.(*v1.ResourceQuota), b.(*v1.ResourceQuota))
 		},
 		NoMatch: func(t *testing.T, a, b runtime.Object) {
-			NoMatch_EphemeralContainers(t, a.(*v1.EphemeralContainers), b.(*v1.EphemeralContainers))
+			NoMatch_ResourceQuota(t, a.(*v1.ResourceQuota), b.(*v1.ResourceQuota))
 		},
 	})
 
-	comparator.RegisterForType(&v1.PodTemplate{}, test.TypedAsserts{
+	comparator.RegisterForType(&v1.Pod{}, test.TypedAsserts{
 		Match: func(t *testing.T, a, b runtime.Object) {
-			Match_PodTemplate(t, a.(*v1.PodTemplate), b.(*v1.PodTemplate))
+			Match_Pod(t, a.(*v1.Pod), b.(*v1.Pod))
 		},
 		NoMatch: func(t *testing.T, a, b runtime.Object) {
-			NoMatch_PodTemplate(t, a.(*v1.PodTemplate), b.(*v1.PodTemplate))
+			NoMatch_Pod(t, a.(*v1.Pod), b.(*v1.Pod))
 		},
 	})
 
-	comparator.RegisterForType(&v1.Binding{}, test.TypedAsserts{
+	comparator.RegisterForType(&v1.RangeAllocation{}, test.TypedAsserts{
 		Match: func(t *testing.T, a, b runtime.Object) {
-			Match_Binding(t, a.(*v1.Binding), b.(*v1.Binding))
+			Match_RangeAllocation(t, a.(*v1.RangeAllocation), b.(*v1.RangeAllocation))
 		},
 		NoMatch: func(t *testing.T, a, b runtime.Object) {
-			NoMatch_Binding(t, a.(*v1.Binding), b.(*v1.Binding))
-		},
-	})
-
-	comparator.RegisterForType(&v1.LimitRange{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
-			Match_LimitRange(t, a.(*v1.LimitRange), b.(*v1.LimitRange))
-		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
-			NoMatch_LimitRange(t, a.(*v1.LimitRange), b.(*v1.LimitRange))
+			NoMatch_RangeAllocation(t, a.(*v1.RangeAllocation), b.(*v1.RangeAllocation))
 		},
 	})
 
@@ -176,6 +134,24 @@ func RegisterAsserts(comparator *test.Comparator) {
 		},
 	})
 
+	comparator.RegisterForType(&v1.LimitRange{}, test.TypedAsserts{
+		Match: func(t *testing.T, a, b runtime.Object) {
+			Match_LimitRange(t, a.(*v1.LimitRange), b.(*v1.LimitRange))
+		},
+		NoMatch: func(t *testing.T, a, b runtime.Object) {
+			NoMatch_LimitRange(t, a.(*v1.LimitRange), b.(*v1.LimitRange))
+		},
+	})
+
+	comparator.RegisterForType(&v1.Namespace{}, test.TypedAsserts{
+		Match: func(t *testing.T, a, b runtime.Object) {
+			Match_Namespace(t, a.(*v1.Namespace), b.(*v1.Namespace))
+		},
+		NoMatch: func(t *testing.T, a, b runtime.Object) {
+			NoMatch_Namespace(t, a.(*v1.Namespace), b.(*v1.Namespace))
+		},
+	})
+
 	comparator.RegisterForType(&v1.PersistentVolumeClaim{}, test.TypedAsserts{
 		Match: func(t *testing.T, a, b runtime.Object) {
 			Match_PersistentVolumeClaim(t, a.(*v1.PersistentVolumeClaim), b.(*v1.PersistentVolumeClaim))
@@ -185,12 +161,39 @@ func RegisterAsserts(comparator *test.Comparator) {
 		},
 	})
 
-	comparator.RegisterForType(&v1.ResourceQuota{}, test.TypedAsserts{
+	comparator.RegisterForType(&v1.PodTemplate{}, test.TypedAsserts{
 		Match: func(t *testing.T, a, b runtime.Object) {
-			Match_ResourceQuota(t, a.(*v1.ResourceQuota), b.(*v1.ResourceQuota))
+			Match_PodTemplate(t, a.(*v1.PodTemplate), b.(*v1.PodTemplate))
 		},
 		NoMatch: func(t *testing.T, a, b runtime.Object) {
-			NoMatch_ResourceQuota(t, a.(*v1.ResourceQuota), b.(*v1.ResourceQuota))
+			NoMatch_PodTemplate(t, a.(*v1.PodTemplate), b.(*v1.PodTemplate))
+		},
+	})
+
+	comparator.RegisterForType(&v1.ReplicationController{}, test.TypedAsserts{
+		Match: func(t *testing.T, a, b runtime.Object) {
+			Match_ReplicationController(t, a.(*v1.ReplicationController), b.(*v1.ReplicationController))
+		},
+		NoMatch: func(t *testing.T, a, b runtime.Object) {
+			NoMatch_ReplicationController(t, a.(*v1.ReplicationController), b.(*v1.ReplicationController))
+		},
+	})
+
+	comparator.RegisterForType(&v1.ComponentStatus{}, test.TypedAsserts{
+		Match: func(t *testing.T, a, b runtime.Object) {
+			Match_ComponentStatus(t, a.(*v1.ComponentStatus), b.(*v1.ComponentStatus))
+		},
+		NoMatch: func(t *testing.T, a, b runtime.Object) {
+			NoMatch_ComponentStatus(t, a.(*v1.ComponentStatus), b.(*v1.ComponentStatus))
+		},
+	})
+
+	comparator.RegisterForType(&v1.EphemeralContainers{}, test.TypedAsserts{
+		Match: func(t *testing.T, a, b runtime.Object) {
+			Match_EphemeralContainers(t, a.(*v1.EphemeralContainers), b.(*v1.EphemeralContainers))
+		},
+		NoMatch: func(t *testing.T, a, b runtime.Object) {
+			NoMatch_EphemeralContainers(t, a.(*v1.EphemeralContainers), b.(*v1.EphemeralContainers))
 		},
 	})
 
@@ -214,57 +217,21 @@ func NoMatch_ServiceAccount(t *testing.T, expected, actual *v1.ServiceAccount) {
 	assert.NotEqualValues(e, actual)
 }
 
-func Assimilate_ComponentStatus(expected, actual *v1.ComponentStatus) *v1.ComponentStatus {
-	e := expected.DeepCopyObject().(*v1.ComponentStatus)
+func Assimilate_Binding(expected, actual *v1.Binding) *v1.Binding {
+	e := expected.DeepCopyObject().(*v1.Binding)
 	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
 	return e
 }
 
-func Match_ComponentStatus(t *testing.T, expected, actual *v1.ComponentStatus) {
+func Match_Binding(t *testing.T, expected, actual *v1.Binding) {
 	assert := assert.New(t)
-	e := Assimilate_ComponentStatus(expected, actual)
+	e := Assimilate_Binding(expected, actual)
 	assert.EqualValues(e, actual)
 }
 
-func NoMatch_ComponentStatus(t *testing.T, expected, actual *v1.ComponentStatus) {
+func NoMatch_Binding(t *testing.T, expected, actual *v1.Binding) {
 	assert := assert.New(t)
-	e := Assimilate_ComponentStatus(expected, actual)
-	assert.NotEqualValues(e, actual)
-}
-
-func Assimilate_Namespace(expected, actual *v1.Namespace) *v1.Namespace {
-	e := expected.DeepCopyObject().(*v1.Namespace)
-	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
-	return e
-}
-
-func Match_Namespace(t *testing.T, expected, actual *v1.Namespace) {
-	assert := assert.New(t)
-	e := Assimilate_Namespace(expected, actual)
-	assert.EqualValues(e, actual)
-}
-
-func NoMatch_Namespace(t *testing.T, expected, actual *v1.Namespace) {
-	assert := assert.New(t)
-	e := Assimilate_Namespace(expected, actual)
-	assert.NotEqualValues(e, actual)
-}
-
-func Assimilate_RangeAllocation(expected, actual *v1.RangeAllocation) *v1.RangeAllocation {
-	e := expected.DeepCopyObject().(*v1.RangeAllocation)
-	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
-	return e
-}
-
-func Match_RangeAllocation(t *testing.T, expected, actual *v1.RangeAllocation) {
-	assert := assert.New(t)
-	e := Assimilate_RangeAllocation(expected, actual)
-	assert.EqualValues(e, actual)
-}
-
-func NoMatch_RangeAllocation(t *testing.T, expected, actual *v1.RangeAllocation) {
-	assert := assert.New(t)
-	e := Assimilate_RangeAllocation(expected, actual)
+	e := Assimilate_Binding(expected, actual)
 	assert.NotEqualValues(e, actual)
 }
 
@@ -286,24 +253,6 @@ func NoMatch_PersistentVolume(t *testing.T, expected, actual *v1.PersistentVolum
 	assert.NotEqualValues(e, actual)
 }
 
-func Assimilate_Pod(expected, actual *v1.Pod) *v1.Pod {
-	e := expected.DeepCopyObject().(*v1.Pod)
-	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
-	return e
-}
-
-func Match_Pod(t *testing.T, expected, actual *v1.Pod) {
-	assert := assert.New(t)
-	e := Assimilate_Pod(expected, actual)
-	assert.EqualValues(e, actual)
-}
-
-func NoMatch_Pod(t *testing.T, expected, actual *v1.Pod) {
-	assert := assert.New(t)
-	e := Assimilate_Pod(expected, actual)
-	assert.NotEqualValues(e, actual)
-}
-
 func Assimilate_Endpoints(expected, actual *v1.Endpoints) *v1.Endpoints {
 	e := expected.DeepCopyObject().(*v1.Endpoints)
 	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
@@ -319,42 +268,6 @@ func Match_Endpoints(t *testing.T, expected, actual *v1.Endpoints) {
 func NoMatch_Endpoints(t *testing.T, expected, actual *v1.Endpoints) {
 	assert := assert.New(t)
 	e := Assimilate_Endpoints(expected, actual)
-	assert.NotEqualValues(e, actual)
-}
-
-func Assimilate_Secret(expected, actual *v1.Secret) *v1.Secret {
-	e := expected.DeepCopyObject().(*v1.Secret)
-	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
-	return e
-}
-
-func Match_Secret(t *testing.T, expected, actual *v1.Secret) {
-	assert := assert.New(t)
-	e := Assimilate_Secret(expected, actual)
-	assert.EqualValues(e, actual)
-}
-
-func NoMatch_Secret(t *testing.T, expected, actual *v1.Secret) {
-	assert := assert.New(t)
-	e := Assimilate_Secret(expected, actual)
-	assert.NotEqualValues(e, actual)
-}
-
-func Assimilate_ReplicationController(expected, actual *v1.ReplicationController) *v1.ReplicationController {
-	e := expected.DeepCopyObject().(*v1.ReplicationController)
-	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
-	return e
-}
-
-func Match_ReplicationController(t *testing.T, expected, actual *v1.ReplicationController) {
-	assert := assert.New(t)
-	e := Assimilate_ReplicationController(expected, actual)
-	assert.EqualValues(e, actual)
-}
-
-func NoMatch_ReplicationController(t *testing.T, expected, actual *v1.ReplicationController) {
-	assert := assert.New(t)
-	e := Assimilate_ReplicationController(expected, actual)
 	assert.NotEqualValues(e, actual)
 }
 
@@ -394,6 +307,24 @@ func NoMatch_Service(t *testing.T, expected, actual *v1.Service) {
 	assert.NotEqualValues(e, actual)
 }
 
+func Assimilate_Secret(expected, actual *v1.Secret) *v1.Secret {
+	e := expected.DeepCopyObject().(*v1.Secret)
+	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
+	return e
+}
+
+func Match_Secret(t *testing.T, expected, actual *v1.Secret) {
+	assert := assert.New(t)
+	e := Assimilate_Secret(expected, actual)
+	assert.EqualValues(e, actual)
+}
+
+func NoMatch_Secret(t *testing.T, expected, actual *v1.Secret) {
+	assert := assert.New(t)
+	e := Assimilate_Secret(expected, actual)
+	assert.NotEqualValues(e, actual)
+}
+
 func Assimilate_ConfigMap(expected, actual *v1.ConfigMap) *v1.ConfigMap {
 	e := expected.DeepCopyObject().(*v1.ConfigMap)
 	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
@@ -430,75 +361,57 @@ func NoMatch_PodStatusResult(t *testing.T, expected, actual *v1.PodStatusResult)
 	assert.NotEqualValues(e, actual)
 }
 
-func Assimilate_EphemeralContainers(expected, actual *v1.EphemeralContainers) *v1.EphemeralContainers {
-	e := expected.DeepCopyObject().(*v1.EphemeralContainers)
+func Assimilate_ResourceQuota(expected, actual *v1.ResourceQuota) *v1.ResourceQuota {
+	e := expected.DeepCopyObject().(*v1.ResourceQuota)
 	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
 	return e
 }
 
-func Match_EphemeralContainers(t *testing.T, expected, actual *v1.EphemeralContainers) {
+func Match_ResourceQuota(t *testing.T, expected, actual *v1.ResourceQuota) {
 	assert := assert.New(t)
-	e := Assimilate_EphemeralContainers(expected, actual)
+	e := Assimilate_ResourceQuota(expected, actual)
 	assert.EqualValues(e, actual)
 }
 
-func NoMatch_EphemeralContainers(t *testing.T, expected, actual *v1.EphemeralContainers) {
+func NoMatch_ResourceQuota(t *testing.T, expected, actual *v1.ResourceQuota) {
 	assert := assert.New(t)
-	e := Assimilate_EphemeralContainers(expected, actual)
+	e := Assimilate_ResourceQuota(expected, actual)
 	assert.NotEqualValues(e, actual)
 }
 
-func Assimilate_PodTemplate(expected, actual *v1.PodTemplate) *v1.PodTemplate {
-	e := expected.DeepCopyObject().(*v1.PodTemplate)
+func Assimilate_Pod(expected, actual *v1.Pod) *v1.Pod {
+	e := expected.DeepCopyObject().(*v1.Pod)
 	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
 	return e
 }
 
-func Match_PodTemplate(t *testing.T, expected, actual *v1.PodTemplate) {
+func Match_Pod(t *testing.T, expected, actual *v1.Pod) {
 	assert := assert.New(t)
-	e := Assimilate_PodTemplate(expected, actual)
+	e := Assimilate_Pod(expected, actual)
 	assert.EqualValues(e, actual)
 }
 
-func NoMatch_PodTemplate(t *testing.T, expected, actual *v1.PodTemplate) {
+func NoMatch_Pod(t *testing.T, expected, actual *v1.Pod) {
 	assert := assert.New(t)
-	e := Assimilate_PodTemplate(expected, actual)
+	e := Assimilate_Pod(expected, actual)
 	assert.NotEqualValues(e, actual)
 }
 
-func Assimilate_Binding(expected, actual *v1.Binding) *v1.Binding {
-	e := expected.DeepCopyObject().(*v1.Binding)
+func Assimilate_RangeAllocation(expected, actual *v1.RangeAllocation) *v1.RangeAllocation {
+	e := expected.DeepCopyObject().(*v1.RangeAllocation)
 	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
 	return e
 }
 
-func Match_Binding(t *testing.T, expected, actual *v1.Binding) {
+func Match_RangeAllocation(t *testing.T, expected, actual *v1.RangeAllocation) {
 	assert := assert.New(t)
-	e := Assimilate_Binding(expected, actual)
+	e := Assimilate_RangeAllocation(expected, actual)
 	assert.EqualValues(e, actual)
 }
 
-func NoMatch_Binding(t *testing.T, expected, actual *v1.Binding) {
+func NoMatch_RangeAllocation(t *testing.T, expected, actual *v1.RangeAllocation) {
 	assert := assert.New(t)
-	e := Assimilate_Binding(expected, actual)
-	assert.NotEqualValues(e, actual)
-}
-
-func Assimilate_LimitRange(expected, actual *v1.LimitRange) *v1.LimitRange {
-	e := expected.DeepCopyObject().(*v1.LimitRange)
-	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
-	return e
-}
-
-func Match_LimitRange(t *testing.T, expected, actual *v1.LimitRange) {
-	assert := assert.New(t)
-	e := Assimilate_LimitRange(expected, actual)
-	assert.EqualValues(e, actual)
-}
-
-func NoMatch_LimitRange(t *testing.T, expected, actual *v1.LimitRange) {
-	assert := assert.New(t)
-	e := Assimilate_LimitRange(expected, actual)
+	e := Assimilate_RangeAllocation(expected, actual)
 	assert.NotEqualValues(e, actual)
 }
 
@@ -520,6 +433,42 @@ func NoMatch_Node(t *testing.T, expected, actual *v1.Node) {
 	assert.NotEqualValues(e, actual)
 }
 
+func Assimilate_LimitRange(expected, actual *v1.LimitRange) *v1.LimitRange {
+	e := expected.DeepCopyObject().(*v1.LimitRange)
+	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
+	return e
+}
+
+func Match_LimitRange(t *testing.T, expected, actual *v1.LimitRange) {
+	assert := assert.New(t)
+	e := Assimilate_LimitRange(expected, actual)
+	assert.EqualValues(e, actual)
+}
+
+func NoMatch_LimitRange(t *testing.T, expected, actual *v1.LimitRange) {
+	assert := assert.New(t)
+	e := Assimilate_LimitRange(expected, actual)
+	assert.NotEqualValues(e, actual)
+}
+
+func Assimilate_Namespace(expected, actual *v1.Namespace) *v1.Namespace {
+	e := expected.DeepCopyObject().(*v1.Namespace)
+	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
+	return e
+}
+
+func Match_Namespace(t *testing.T, expected, actual *v1.Namespace) {
+	assert := assert.New(t)
+	e := Assimilate_Namespace(expected, actual)
+	assert.EqualValues(e, actual)
+}
+
+func NoMatch_Namespace(t *testing.T, expected, actual *v1.Namespace) {
+	assert := assert.New(t)
+	e := Assimilate_Namespace(expected, actual)
+	assert.NotEqualValues(e, actual)
+}
+
 func Assimilate_PersistentVolumeClaim(expected, actual *v1.PersistentVolumeClaim) *v1.PersistentVolumeClaim {
 	e := expected.DeepCopyObject().(*v1.PersistentVolumeClaim)
 	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
@@ -538,20 +487,74 @@ func NoMatch_PersistentVolumeClaim(t *testing.T, expected, actual *v1.Persistent
 	assert.NotEqualValues(e, actual)
 }
 
-func Assimilate_ResourceQuota(expected, actual *v1.ResourceQuota) *v1.ResourceQuota {
-	e := expected.DeepCopyObject().(*v1.ResourceQuota)
+func Assimilate_PodTemplate(expected, actual *v1.PodTemplate) *v1.PodTemplate {
+	e := expected.DeepCopyObject().(*v1.PodTemplate)
 	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
 	return e
 }
 
-func Match_ResourceQuota(t *testing.T, expected, actual *v1.ResourceQuota) {
+func Match_PodTemplate(t *testing.T, expected, actual *v1.PodTemplate) {
 	assert := assert.New(t)
-	e := Assimilate_ResourceQuota(expected, actual)
+	e := Assimilate_PodTemplate(expected, actual)
 	assert.EqualValues(e, actual)
 }
 
-func NoMatch_ResourceQuota(t *testing.T, expected, actual *v1.ResourceQuota) {
+func NoMatch_PodTemplate(t *testing.T, expected, actual *v1.PodTemplate) {
 	assert := assert.New(t)
-	e := Assimilate_ResourceQuota(expected, actual)
+	e := Assimilate_PodTemplate(expected, actual)
+	assert.NotEqualValues(e, actual)
+}
+
+func Assimilate_ReplicationController(expected, actual *v1.ReplicationController) *v1.ReplicationController {
+	e := expected.DeepCopyObject().(*v1.ReplicationController)
+	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
+	return e
+}
+
+func Match_ReplicationController(t *testing.T, expected, actual *v1.ReplicationController) {
+	assert := assert.New(t)
+	e := Assimilate_ReplicationController(expected, actual)
+	assert.EqualValues(e, actual)
+}
+
+func NoMatch_ReplicationController(t *testing.T, expected, actual *v1.ReplicationController) {
+	assert := assert.New(t)
+	e := Assimilate_ReplicationController(expected, actual)
+	assert.NotEqualValues(e, actual)
+}
+
+func Assimilate_ComponentStatus(expected, actual *v1.ComponentStatus) *v1.ComponentStatus {
+	e := expected.DeepCopyObject().(*v1.ComponentStatus)
+	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
+	return e
+}
+
+func Match_ComponentStatus(t *testing.T, expected, actual *v1.ComponentStatus) {
+	assert := assert.New(t)
+	e := Assimilate_ComponentStatus(expected, actual)
+	assert.EqualValues(e, actual)
+}
+
+func NoMatch_ComponentStatus(t *testing.T, expected, actual *v1.ComponentStatus) {
+	assert := assert.New(t)
+	e := Assimilate_ComponentStatus(expected, actual)
+	assert.NotEqualValues(e, actual)
+}
+
+func Assimilate_EphemeralContainers(expected, actual *v1.EphemeralContainers) *v1.EphemeralContainers {
+	e := expected.DeepCopyObject().(*v1.EphemeralContainers)
+	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
+	return e
+}
+
+func Match_EphemeralContainers(t *testing.T, expected, actual *v1.EphemeralContainers) {
+	assert := assert.New(t)
+	e := Assimilate_EphemeralContainers(expected, actual)
+	assert.EqualValues(e, actual)
+}
+
+func NoMatch_EphemeralContainers(t *testing.T, expected, actual *v1.EphemeralContainers) {
+	assert := assert.New(t)
+	e := Assimilate_EphemeralContainers(expected, actual)
 	assert.NotEqualValues(e, actual)
 }
