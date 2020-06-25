@@ -10,16 +10,28 @@ import (
 )
 
 func init() {
+	if err := v1alpha3.AddToScheme(test.DefaultScheme); err != nil {
+		panic(err)
+	}
 	RegisterAsserts(test.DefaultComparator)
 }
 
 func RegisterAsserts(comparator *test.Comparator) {
-	comparator.RegisterForType(&v1alpha3.DestinationRule{}, test.TypedAsserts{
+	comparator.RegisterForType(&v1alpha3.EnvoyFilter{}, test.TypedAsserts{
 		Match: func(t *testing.T, a, b runtime.Object) {
-			Match_DestinationRule(t, a.(*v1alpha3.DestinationRule), b.(*v1alpha3.DestinationRule))
+			Match_EnvoyFilter(t, a.(*v1alpha3.EnvoyFilter), b.(*v1alpha3.EnvoyFilter))
 		},
 		NoMatch: func(t *testing.T, a, b runtime.Object) {
-			NoMatch_DestinationRule(t, a.(*v1alpha3.DestinationRule), b.(*v1alpha3.DestinationRule))
+			NoMatch_EnvoyFilter(t, a.(*v1alpha3.EnvoyFilter), b.(*v1alpha3.EnvoyFilter))
+		},
+	})
+
+	comparator.RegisterForType(&v1alpha3.WorkloadEntry{}, test.TypedAsserts{
+		Match: func(t *testing.T, a, b runtime.Object) {
+			Match_WorkloadEntry(t, a.(*v1alpha3.WorkloadEntry), b.(*v1alpha3.WorkloadEntry))
+		},
+		NoMatch: func(t *testing.T, a, b runtime.Object) {
+			NoMatch_WorkloadEntry(t, a.(*v1alpha3.WorkloadEntry), b.(*v1alpha3.WorkloadEntry))
 		},
 	})
 
@@ -29,6 +41,24 @@ func RegisterAsserts(comparator *test.Comparator) {
 		},
 		NoMatch: func(t *testing.T, a, b runtime.Object) {
 			NoMatch_Gateway(t, a.(*v1alpha3.Gateway), b.(*v1alpha3.Gateway))
+		},
+	})
+
+	comparator.RegisterForType(&v1alpha3.DestinationRule{}, test.TypedAsserts{
+		Match: func(t *testing.T, a, b runtime.Object) {
+			Match_DestinationRule(t, a.(*v1alpha3.DestinationRule), b.(*v1alpha3.DestinationRule))
+		},
+		NoMatch: func(t *testing.T, a, b runtime.Object) {
+			NoMatch_DestinationRule(t, a.(*v1alpha3.DestinationRule), b.(*v1alpha3.DestinationRule))
+		},
+	})
+
+	comparator.RegisterForType(&v1alpha3.ServiceEntry{}, test.TypedAsserts{
+		Match: func(t *testing.T, a, b runtime.Object) {
+			Match_ServiceEntry(t, a.(*v1alpha3.ServiceEntry), b.(*v1alpha3.ServiceEntry))
+		},
+		NoMatch: func(t *testing.T, a, b runtime.Object) {
+			NoMatch_ServiceEntry(t, a.(*v1alpha3.ServiceEntry), b.(*v1alpha3.ServiceEntry))
 		},
 	})
 
@@ -50,33 +80,60 @@ func RegisterAsserts(comparator *test.Comparator) {
 		},
 	})
 
-	comparator.RegisterForType(&v1alpha3.WorkloadEntry{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
-			Match_WorkloadEntry(t, a.(*v1alpha3.WorkloadEntry), b.(*v1alpha3.WorkloadEntry))
-		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
-			NoMatch_WorkloadEntry(t, a.(*v1alpha3.WorkloadEntry), b.(*v1alpha3.WorkloadEntry))
-		},
-	})
+}
 
-	comparator.RegisterForType(&v1alpha3.EnvoyFilter{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
-			Match_EnvoyFilter(t, a.(*v1alpha3.EnvoyFilter), b.(*v1alpha3.EnvoyFilter))
-		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
-			NoMatch_EnvoyFilter(t, a.(*v1alpha3.EnvoyFilter), b.(*v1alpha3.EnvoyFilter))
-		},
-	})
+func Assimilate_EnvoyFilter(expected, actual *v1alpha3.EnvoyFilter) *v1alpha3.EnvoyFilter {
+	e := expected.DeepCopyObject().(*v1alpha3.EnvoyFilter)
+	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
+	return e
+}
 
-	comparator.RegisterForType(&v1alpha3.ServiceEntry{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
-			Match_ServiceEntry(t, a.(*v1alpha3.ServiceEntry), b.(*v1alpha3.ServiceEntry))
-		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
-			NoMatch_ServiceEntry(t, a.(*v1alpha3.ServiceEntry), b.(*v1alpha3.ServiceEntry))
-		},
-	})
+func Match_EnvoyFilter(t *testing.T, expected, actual *v1alpha3.EnvoyFilter) {
+	assert := assert.New(t)
+	e := Assimilate_EnvoyFilter(expected, actual)
+	assert.EqualValues(e, actual)
+}
 
+func NoMatch_EnvoyFilter(t *testing.T, expected, actual *v1alpha3.EnvoyFilter) {
+	assert := assert.New(t)
+	e := Assimilate_EnvoyFilter(expected, actual)
+	assert.NotEqualValues(e, actual)
+}
+
+func Assimilate_WorkloadEntry(expected, actual *v1alpha3.WorkloadEntry) *v1alpha3.WorkloadEntry {
+	e := expected.DeepCopyObject().(*v1alpha3.WorkloadEntry)
+	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
+	return e
+}
+
+func Match_WorkloadEntry(t *testing.T, expected, actual *v1alpha3.WorkloadEntry) {
+	assert := assert.New(t)
+	e := Assimilate_WorkloadEntry(expected, actual)
+	assert.EqualValues(e, actual)
+}
+
+func NoMatch_WorkloadEntry(t *testing.T, expected, actual *v1alpha3.WorkloadEntry) {
+	assert := assert.New(t)
+	e := Assimilate_WorkloadEntry(expected, actual)
+	assert.NotEqualValues(e, actual)
+}
+
+func Assimilate_Gateway(expected, actual *v1alpha3.Gateway) *v1alpha3.Gateway {
+	e := expected.DeepCopyObject().(*v1alpha3.Gateway)
+	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
+	return e
+}
+
+func Match_Gateway(t *testing.T, expected, actual *v1alpha3.Gateway) {
+	assert := assert.New(t)
+	e := Assimilate_Gateway(expected, actual)
+	assert.EqualValues(e, actual)
+}
+
+func NoMatch_Gateway(t *testing.T, expected, actual *v1alpha3.Gateway) {
+	assert := assert.New(t)
+	e := Assimilate_Gateway(expected, actual)
+	assert.NotEqualValues(e, actual)
 }
 
 func Assimilate_DestinationRule(expected, actual *v1alpha3.DestinationRule) *v1alpha3.DestinationRule {
@@ -97,21 +154,21 @@ func NoMatch_DestinationRule(t *testing.T, expected, actual *v1alpha3.Destinatio
 	assert.NotEqualValues(e, actual)
 }
 
-func Assimilate_Gateway(expected, actual *v1alpha3.Gateway) *v1alpha3.Gateway {
-	e := expected.DeepCopyObject().(*v1alpha3.Gateway)
+func Assimilate_ServiceEntry(expected, actual *v1alpha3.ServiceEntry) *v1alpha3.ServiceEntry {
+	e := expected.DeepCopyObject().(*v1alpha3.ServiceEntry)
 	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
 	return e
 }
 
-func Match_Gateway(t *testing.T, expected, actual *v1alpha3.Gateway) {
+func Match_ServiceEntry(t *testing.T, expected, actual *v1alpha3.ServiceEntry) {
 	assert := assert.New(t)
-	e := Assimilate_Gateway(expected, actual)
+	e := Assimilate_ServiceEntry(expected, actual)
 	assert.EqualValues(e, actual)
 }
 
-func NoMatch_Gateway(t *testing.T, expected, actual *v1alpha3.Gateway) {
+func NoMatch_ServiceEntry(t *testing.T, expected, actual *v1alpha3.ServiceEntry) {
 	assert := assert.New(t)
-	e := Assimilate_Gateway(expected, actual)
+	e := Assimilate_ServiceEntry(expected, actual)
 	assert.NotEqualValues(e, actual)
 }
 
@@ -148,59 +205,5 @@ func Match_VirtualService(t *testing.T, expected, actual *v1alpha3.VirtualServic
 func NoMatch_VirtualService(t *testing.T, expected, actual *v1alpha3.VirtualService) {
 	assert := assert.New(t)
 	e := Assimilate_VirtualService(expected, actual)
-	assert.NotEqualValues(e, actual)
-}
-
-func Assimilate_WorkloadEntry(expected, actual *v1alpha3.WorkloadEntry) *v1alpha3.WorkloadEntry {
-	e := expected.DeepCopyObject().(*v1alpha3.WorkloadEntry)
-	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
-	return e
-}
-
-func Match_WorkloadEntry(t *testing.T, expected, actual *v1alpha3.WorkloadEntry) {
-	assert := assert.New(t)
-	e := Assimilate_WorkloadEntry(expected, actual)
-	assert.EqualValues(e, actual)
-}
-
-func NoMatch_WorkloadEntry(t *testing.T, expected, actual *v1alpha3.WorkloadEntry) {
-	assert := assert.New(t)
-	e := Assimilate_WorkloadEntry(expected, actual)
-	assert.NotEqualValues(e, actual)
-}
-
-func Assimilate_EnvoyFilter(expected, actual *v1alpha3.EnvoyFilter) *v1alpha3.EnvoyFilter {
-	e := expected.DeepCopyObject().(*v1alpha3.EnvoyFilter)
-	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
-	return e
-}
-
-func Match_EnvoyFilter(t *testing.T, expected, actual *v1alpha3.EnvoyFilter) {
-	assert := assert.New(t)
-	e := Assimilate_EnvoyFilter(expected, actual)
-	assert.EqualValues(e, actual)
-}
-
-func NoMatch_EnvoyFilter(t *testing.T, expected, actual *v1alpha3.EnvoyFilter) {
-	assert := assert.New(t)
-	e := Assimilate_EnvoyFilter(expected, actual)
-	assert.NotEqualValues(e, actual)
-}
-
-func Assimilate_ServiceEntry(expected, actual *v1alpha3.ServiceEntry) *v1alpha3.ServiceEntry {
-	e := expected.DeepCopyObject().(*v1alpha3.ServiceEntry)
-	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
-	return e
-}
-
-func Match_ServiceEntry(t *testing.T, expected, actual *v1alpha3.ServiceEntry) {
-	assert := assert.New(t)
-	e := Assimilate_ServiceEntry(expected, actual)
-	assert.EqualValues(e, actual)
-}
-
-func NoMatch_ServiceEntry(t *testing.T, expected, actual *v1alpha3.ServiceEntry) {
-	assert := assert.New(t)
-	e := Assimilate_ServiceEntry(expected, actual)
 	assert.NotEqualValues(e, actual)
 }
