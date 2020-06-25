@@ -94,6 +94,7 @@ func (g *gen) Init(c *generator.Context, w io.Writer) error {
 		"defaultScheme": c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "DefaultScheme"}),
 		"object": c.Universe.Type(types.Name{Package: "k8s.io/apimachinery/pkg/runtime", Name: "Object"}),
 		"assimilateObjectMeta": c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "Assimilate_ObjectMeta"}),
+		"assimilateTypeMeta": c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "Assimilate_TypeMeta"}),
 		"typedAsserts": c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "TypedAsserts"}),
 		"addToScheme": c.Universe.Type(types.Name{Package: g.typesPackage, Name: "AddToScheme"}),
 	}
@@ -124,6 +125,7 @@ func (g *gen) Init(c *generator.Context, w io.Writer) error {
 		sw.Do("func $.t|assimilateFn$(expected, actual *$.t|raw$) *$.t|raw$ {\n", args)
 		sw.Do("e := expected.DeepCopyObject().(*$.t|raw$)\n", args)
 		sw.Do("e.ObjectMeta = $.assimilateObjectMeta|raw$(e.ObjectMeta, actual.ObjectMeta)\n", args)
+		sw.Do("e.TypeMeta = $.assimilateTypeMeta|raw$(e.TypeMeta, actual.TypeMeta)\n", args)
 		sw.Do("return e\n", nil)
 		sw.Do("}\n\n", nil)
 

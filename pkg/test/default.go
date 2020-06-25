@@ -23,3 +23,13 @@ func Assimilate_ObjectMeta(expected, actual meta.ObjectMeta) meta.ObjectMeta{
 	e.Generation = actual.Generation
 	return *e
 }
+
+func Assimilate_TypeMeta(expected, actual meta.TypeMeta) meta.TypeMeta{
+	if expected.Kind == "" && expected.APIVersion == "" {
+		return actual
+	}
+	if actual.Kind == "" && actual.APIVersion == "" {
+		return actual
+	}
+	return expected
+}
