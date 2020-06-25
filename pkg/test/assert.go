@@ -32,3 +32,15 @@ func AssertNotFound(
 	err = cli.Get(ctx, key, actual)
 	assert.Error(err, "Unexpected object found")
 }
+
+func AssertAllMatch(
+	ctx context.Context,
+	t *testing.T,
+	cli client.Client,
+	expected []runtime.Object,
+	msgAndArgs ...interface{},
+) {
+	for _, e := range expected {
+		AssertMatch(ctx, t, cli, e, msgAndArgs...)
+	}
+}
