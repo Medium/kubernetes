@@ -7,6 +7,7 @@ import (
 	"k8s.io/gengo/types"
 	"k8s.io/klog/v2"
 	"path/filepath"
+	"sort"
 	"strings"
 )
 
@@ -38,6 +39,9 @@ func Packages(context *generator.Context, arguments *args.GeneratorArgs) generat
 				}
 			}
 		}
+		sort.Slice(newComparators, func(i, j int) bool {
+			return newComparators[i].Name.String() < newComparators[j].Name.String()
+		})
 		if len(newComparators) == 0 {
 			klog.V(5).Infof("No valid types found in %q", pkg.Path)
 			continue
