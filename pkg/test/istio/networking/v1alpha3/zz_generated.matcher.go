@@ -6,7 +6,7 @@ import (
 	assert "github.com/stretchr/testify/assert"
 	test "go.medium.engineering/kubernetes/pkg/test"
 	v1alpha3 "istio.io/client-go/pkg/apis/networking/v1alpha3"
-	"sigs.k8s.io/controller-runtime/pkg/client"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
 func init() {
@@ -18,64 +18,64 @@ func init() {
 
 func RegisterAsserts(comparator *test.Comparator) {
 	comparator.RegisterForType(&v1alpha3.DestinationRule{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b client.Object) {
+		Match: func(t *testing.T, a, b runtime.Object) {
 			Match_DestinationRule(t, a.(*v1alpha3.DestinationRule), b.(*v1alpha3.DestinationRule))
 		},
-		NoMatch: func(t *testing.T, a, b client.Object) {
+		NoMatch: func(t *testing.T, a, b runtime.Object) {
 			NoMatch_DestinationRule(t, a.(*v1alpha3.DestinationRule), b.(*v1alpha3.DestinationRule))
 		},
 	})
 
 	comparator.RegisterForType(&v1alpha3.EnvoyFilter{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b client.Object) {
+		Match: func(t *testing.T, a, b runtime.Object) {
 			Match_EnvoyFilter(t, a.(*v1alpha3.EnvoyFilter), b.(*v1alpha3.EnvoyFilter))
 		},
-		NoMatch: func(t *testing.T, a, b client.Object) {
+		NoMatch: func(t *testing.T, a, b runtime.Object) {
 			NoMatch_EnvoyFilter(t, a.(*v1alpha3.EnvoyFilter), b.(*v1alpha3.EnvoyFilter))
 		},
 	})
 
 	comparator.RegisterForType(&v1alpha3.Gateway{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b client.Object) {
+		Match: func(t *testing.T, a, b runtime.Object) {
 			Match_Gateway(t, a.(*v1alpha3.Gateway), b.(*v1alpha3.Gateway))
 		},
-		NoMatch: func(t *testing.T, a, b client.Object) {
+		NoMatch: func(t *testing.T, a, b runtime.Object) {
 			NoMatch_Gateway(t, a.(*v1alpha3.Gateway), b.(*v1alpha3.Gateway))
 		},
 	})
 
 	comparator.RegisterForType(&v1alpha3.ServiceEntry{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b client.Object) {
+		Match: func(t *testing.T, a, b runtime.Object) {
 			Match_ServiceEntry(t, a.(*v1alpha3.ServiceEntry), b.(*v1alpha3.ServiceEntry))
 		},
-		NoMatch: func(t *testing.T, a, b client.Object) {
+		NoMatch: func(t *testing.T, a, b runtime.Object) {
 			NoMatch_ServiceEntry(t, a.(*v1alpha3.ServiceEntry), b.(*v1alpha3.ServiceEntry))
 		},
 	})
 
 	comparator.RegisterForType(&v1alpha3.Sidecar{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b client.Object) {
+		Match: func(t *testing.T, a, b runtime.Object) {
 			Match_Sidecar(t, a.(*v1alpha3.Sidecar), b.(*v1alpha3.Sidecar))
 		},
-		NoMatch: func(t *testing.T, a, b client.Object) {
+		NoMatch: func(t *testing.T, a, b runtime.Object) {
 			NoMatch_Sidecar(t, a.(*v1alpha3.Sidecar), b.(*v1alpha3.Sidecar))
 		},
 	})
 
 	comparator.RegisterForType(&v1alpha3.VirtualService{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b client.Object) {
+		Match: func(t *testing.T, a, b runtime.Object) {
 			Match_VirtualService(t, a.(*v1alpha3.VirtualService), b.(*v1alpha3.VirtualService))
 		},
-		NoMatch: func(t *testing.T, a, b client.Object) {
+		NoMatch: func(t *testing.T, a, b runtime.Object) {
 			NoMatch_VirtualService(t, a.(*v1alpha3.VirtualService), b.(*v1alpha3.VirtualService))
 		},
 	})
 
 	comparator.RegisterForType(&v1alpha3.WorkloadEntry{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b client.Object) {
+		Match: func(t *testing.T, a, b runtime.Object) {
 			Match_WorkloadEntry(t, a.(*v1alpha3.WorkloadEntry), b.(*v1alpha3.WorkloadEntry))
 		},
-		NoMatch: func(t *testing.T, a, b client.Object) {
+		NoMatch: func(t *testing.T, a, b runtime.Object) {
 			NoMatch_WorkloadEntry(t, a.(*v1alpha3.WorkloadEntry), b.(*v1alpha3.WorkloadEntry))
 		},
 	})

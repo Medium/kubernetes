@@ -11,7 +11,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-type AssertFn func(t *testing.T, a, b client.Object)
+type AssertFn func(t *testing.T, a, b runtime.Object)
 
 type TypedAsserts struct {
 	Match   AssertFn
@@ -35,14 +35,13 @@ func (c *Comparator) AssertMatch(
 	ctx context.Context,
 	t *testing.T,
 	cli client.Client,
-	expected client.Object,
+	expected runtime.Object,
 	msgAndArgs ...interface{},
 ) {
 	assert := testify.New(t)
-	actual := expected.DeepCopyObject().(client.Object)
-	CopyMeta(&actual, &expected)
-	key := client.ObjectKeyFromObject(expected)
-	assert.NoError(cli.Get(ctx, key, actual))
+	actual := expected.DeepCopyObject()
+	key := client.ObjectKeyFromObject(expected.(client.Object))
+	assert.NoError(cli.Get(ctx, key, actual.(client.Object)))
 	gvk := kinds.Identify(c.scheme, expected)
 	assert.NotEmpty(gvk.Kind, "Can't resolve expected value kind")
 	asserts, ok := c.typedAsserts[gvk]
