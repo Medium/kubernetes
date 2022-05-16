@@ -3,9 +3,10 @@ package kinds
 import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func Identify(scheme *runtime.Scheme, obj runtime.Object) schema.GroupVersionKind {
+func Identify(scheme *runtime.Scheme, obj client.Object) schema.GroupVersionKind {
 	kind := obj.GetObjectKind()
 	gvk := kind.GroupVersionKind()
 	if gvk.Kind == "" {

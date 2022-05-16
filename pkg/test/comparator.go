@@ -11,7 +11,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-type AssertFn func(t *testing.T, a, b runtime.Object)
+type AssertFn func(t *testing.T, a, b client.Object)
 
 type TypedAsserts struct {
 	Match   AssertFn
@@ -23,7 +23,7 @@ type Comparator struct {
 	scheme       *runtime.Scheme
 }
 
-func (c *Comparator) RegisterForType(obj runtime.Object, asserts TypedAsserts) {
+func (c *Comparator) RegisterForType(obj client.Object, asserts TypedAsserts) {
 	gvk := kinds.Identify(c.scheme, obj)
 	if gvk.Kind == "" {
 		panic("can't identify type")
@@ -35,7 +35,7 @@ func (c *Comparator) AssertMatch(
 	ctx context.Context,
 	t *testing.T,
 	cli client.Client,
-	expected runtime.Object,
+	expected client.Object,
 	msgAndArgs ...interface{},
 ) {
 	assert := testify.New(t)

@@ -6,7 +6,7 @@ import (
 	assert "github.com/stretchr/testify/assert"
 	test "go.medium.engineering/kubernetes/pkg/test"
 	v1 "k8s.io/api/core/v1"
-	runtime "k8s.io/apimachinery/pkg/runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 func init() {
@@ -18,172 +18,172 @@ func init() {
 
 func RegisterAsserts(comparator *test.Comparator) {
 	comparator.RegisterForType(&v1.Binding{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
+		Match: func(t *testing.T, a, b client.Object) {
 			Match_Binding(t, a.(*v1.Binding), b.(*v1.Binding))
 		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
+		NoMatch: func(t *testing.T, a, b client.Object) {
 			NoMatch_Binding(t, a.(*v1.Binding), b.(*v1.Binding))
 		},
 	})
 
 	comparator.RegisterForType(&v1.ComponentStatus{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
+		Match: func(t *testing.T, a, b client.Object) {
 			Match_ComponentStatus(t, a.(*v1.ComponentStatus), b.(*v1.ComponentStatus))
 		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
+		NoMatch: func(t *testing.T, a, b client.Object) {
 			NoMatch_ComponentStatus(t, a.(*v1.ComponentStatus), b.(*v1.ComponentStatus))
 		},
 	})
 
 	comparator.RegisterForType(&v1.ConfigMap{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
+		Match: func(t *testing.T, a, b client.Object) {
 			Match_ConfigMap(t, a.(*v1.ConfigMap), b.(*v1.ConfigMap))
 		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
+		NoMatch: func(t *testing.T, a, b client.Object) {
 			NoMatch_ConfigMap(t, a.(*v1.ConfigMap), b.(*v1.ConfigMap))
 		},
 	})
 
 	comparator.RegisterForType(&v1.Endpoints{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
+		Match: func(t *testing.T, a, b client.Object) {
 			Match_Endpoints(t, a.(*v1.Endpoints), b.(*v1.Endpoints))
 		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
+		NoMatch: func(t *testing.T, a, b client.Object) {
 			NoMatch_Endpoints(t, a.(*v1.Endpoints), b.(*v1.Endpoints))
 		},
 	})
 
 	comparator.RegisterForType(&v1.Event{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
+		Match: func(t *testing.T, a, b client.Object) {
 			Match_Event(t, a.(*v1.Event), b.(*v1.Event))
 		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
+		NoMatch: func(t *testing.T, a, b client.Object) {
 			NoMatch_Event(t, a.(*v1.Event), b.(*v1.Event))
 		},
 	})
 
 	comparator.RegisterForType(&v1.LimitRange{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
+		Match: func(t *testing.T, a, b client.Object) {
 			Match_LimitRange(t, a.(*v1.LimitRange), b.(*v1.LimitRange))
 		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
+		NoMatch: func(t *testing.T, a, b client.Object) {
 			NoMatch_LimitRange(t, a.(*v1.LimitRange), b.(*v1.LimitRange))
 		},
 	})
 
 	comparator.RegisterForType(&v1.Namespace{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
+		Match: func(t *testing.T, a, b client.Object) {
 			Match_Namespace(t, a.(*v1.Namespace), b.(*v1.Namespace))
 		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
+		NoMatch: func(t *testing.T, a, b client.Object) {
 			NoMatch_Namespace(t, a.(*v1.Namespace), b.(*v1.Namespace))
 		},
 	})
 
 	comparator.RegisterForType(&v1.Node{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
+		Match: func(t *testing.T, a, b client.Object) {
 			Match_Node(t, a.(*v1.Node), b.(*v1.Node))
 		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
+		NoMatch: func(t *testing.T, a, b client.Object) {
 			NoMatch_Node(t, a.(*v1.Node), b.(*v1.Node))
 		},
 	})
 
 	comparator.RegisterForType(&v1.PersistentVolume{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
+		Match: func(t *testing.T, a, b client.Object) {
 			Match_PersistentVolume(t, a.(*v1.PersistentVolume), b.(*v1.PersistentVolume))
 		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
+		NoMatch: func(t *testing.T, a, b client.Object) {
 			NoMatch_PersistentVolume(t, a.(*v1.PersistentVolume), b.(*v1.PersistentVolume))
 		},
 	})
 
 	comparator.RegisterForType(&v1.PersistentVolumeClaim{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
+		Match: func(t *testing.T, a, b client.Object) {
 			Match_PersistentVolumeClaim(t, a.(*v1.PersistentVolumeClaim), b.(*v1.PersistentVolumeClaim))
 		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
+		NoMatch: func(t *testing.T, a, b client.Object) {
 			NoMatch_PersistentVolumeClaim(t, a.(*v1.PersistentVolumeClaim), b.(*v1.PersistentVolumeClaim))
 		},
 	})
 
 	comparator.RegisterForType(&v1.Pod{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
+		Match: func(t *testing.T, a, b client.Object) {
 			Match_Pod(t, a.(*v1.Pod), b.(*v1.Pod))
 		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
+		NoMatch: func(t *testing.T, a, b client.Object) {
 			NoMatch_Pod(t, a.(*v1.Pod), b.(*v1.Pod))
 		},
 	})
 
 	comparator.RegisterForType(&v1.PodStatusResult{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
+		Match: func(t *testing.T, a, b client.Object) {
 			Match_PodStatusResult(t, a.(*v1.PodStatusResult), b.(*v1.PodStatusResult))
 		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
+		NoMatch: func(t *testing.T, a, b client.Object) {
 			NoMatch_PodStatusResult(t, a.(*v1.PodStatusResult), b.(*v1.PodStatusResult))
 		},
 	})
 
 	comparator.RegisterForType(&v1.PodTemplate{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
+		Match: func(t *testing.T, a, b client.Object) {
 			Match_PodTemplate(t, a.(*v1.PodTemplate), b.(*v1.PodTemplate))
 		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
+		NoMatch: func(t *testing.T, a, b client.Object) {
 			NoMatch_PodTemplate(t, a.(*v1.PodTemplate), b.(*v1.PodTemplate))
 		},
 	})
 
 	comparator.RegisterForType(&v1.RangeAllocation{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
+		Match: func(t *testing.T, a, b client.Object) {
 			Match_RangeAllocation(t, a.(*v1.RangeAllocation), b.(*v1.RangeAllocation))
 		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
+		NoMatch: func(t *testing.T, a, b client.Object) {
 			NoMatch_RangeAllocation(t, a.(*v1.RangeAllocation), b.(*v1.RangeAllocation))
 		},
 	})
 
 	comparator.RegisterForType(&v1.ReplicationController{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
+		Match: func(t *testing.T, a, b client.Object) {
 			Match_ReplicationController(t, a.(*v1.ReplicationController), b.(*v1.ReplicationController))
 		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
+		NoMatch: func(t *testing.T, a, b client.Object) {
 			NoMatch_ReplicationController(t, a.(*v1.ReplicationController), b.(*v1.ReplicationController))
 		},
 	})
 
 	comparator.RegisterForType(&v1.ResourceQuota{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
+		Match: func(t *testing.T, a, b client.Object) {
 			Match_ResourceQuota(t, a.(*v1.ResourceQuota), b.(*v1.ResourceQuota))
 		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
+		NoMatch: func(t *testing.T, a, b client.Object) {
 			NoMatch_ResourceQuota(t, a.(*v1.ResourceQuota), b.(*v1.ResourceQuota))
 		},
 	})
 
 	comparator.RegisterForType(&v1.Secret{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
+		Match: func(t *testing.T, a, b client.Object) {
 			Match_Secret(t, a.(*v1.Secret), b.(*v1.Secret))
 		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
+		NoMatch: func(t *testing.T, a, b client.Object) {
 			NoMatch_Secret(t, a.(*v1.Secret), b.(*v1.Secret))
 		},
 	})
 
 	comparator.RegisterForType(&v1.Service{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
+		Match: func(t *testing.T, a, b client.Object) {
 			Match_Service(t, a.(*v1.Service), b.(*v1.Service))
 		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
+		NoMatch: func(t *testing.T, a, b client.Object) {
 			NoMatch_Service(t, a.(*v1.Service), b.(*v1.Service))
 		},
 	})
 
 	comparator.RegisterForType(&v1.ServiceAccount{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
+		Match: func(t *testing.T, a, b client.Object) {
 			Match_ServiceAccount(t, a.(*v1.ServiceAccount), b.(*v1.ServiceAccount))
 		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
+		NoMatch: func(t *testing.T, a, b client.Object) {
 			NoMatch_ServiceAccount(t, a.(*v1.ServiceAccount), b.(*v1.ServiceAccount))
 		},
 	})
