@@ -40,7 +40,8 @@ func (c *Comparator) AssertMatch(
 ) {
 	assert := testify.New(t)
 	actual := expected.DeepCopyObject().(client.Object)
-	key := client.ObjectKeyFromObject(expected.(client.Object))
+	CopyMeta(actual, expected)
+	key := client.ObjectKeyFromObject(expected)
 	assert.NoError(cli.Get(ctx, key, actual))
 	gvk := kinds.Identify(c.scheme, expected)
 	assert.NotEmpty(gvk.Kind, "Can't resolve expected value kind")
@@ -54,4 +55,23 @@ func NewComparator(scheme *runtime.Scheme) *Comparator {
 		typedAsserts: map[schema.GroupVersionKind]TypedAsserts{},
 		scheme:       scheme,
 	}
+}
+
+func CopyMeta(obj1, obj2 client.Object) {
+	obj2.SetAnnotations(obj1.GetAnnotations())
+	obj2.SetClusterName(obj1.GetClusterName())
+	obj2.SetCreationTimestamp(obj1.GetCreationTimestamp())
+	obj2.SetDeletionGracePeriodSeconds(obj1.GetDeletionGracePeriodSeconds())
+	obj2.SetDeletionTimestamp(obj1.GetDeletionTimestamp())
+	obj2.SetFinalizers(obj1.GetFinalizers())
+	obj2.SetGenerateName(obj1.GetGenerateName())
+	obj2.SetGeneration(obj1.GetGeneration())
+	obj2.SetLabels(obj1.GetLabels())
+	obj2.SetManagedFields(obj1.GetManagedFields())
+	obj2.SetName(obj1.GetName())
+	obj2.SetNamespace(obj1.GetNamespace())
+	obj2.SetOwnerReferences(obj1.GetOwnerReferences())
+	obj2.SetResourceVersion(obj1.GetResourceVersion())
+	obj2.SetSelfLink(obj1.GetSelfLink())
+	obj2.SetUID(obj1.GetUID())
 }
