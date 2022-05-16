@@ -2,12 +2,13 @@ package test
 
 import (
 	"context"
+	"testing"
+
 	testify "github.com/stretchr/testify/assert"
 	"go.medium.engineering/kubernetes/pkg/kinds"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"testing"
 )
 
 type AssertFn func(t *testing.T, a, b runtime.Object)
@@ -19,7 +20,7 @@ type TypedAsserts struct {
 
 type Comparator struct {
 	typedAsserts map[schema.GroupVersionKind]TypedAsserts
-	scheme *runtime.Scheme
+	scheme       *runtime.Scheme
 }
 
 func (c *Comparator) RegisterForType(obj runtime.Object, asserts TypedAsserts) {
@@ -38,9 +39,8 @@ func (c *Comparator) AssertMatch(
 	msgAndArgs ...interface{},
 ) {
 	assert := testify.New(t)
-	actual := expected.DeepCopyObject()
-	key, err := client.ObjectKeyFromObject(expected)
-	assert.NoError(err, msgAndArgs...)
+	actual := expected.DeepCopyObject().(client.Object)
+	key := client.ObjectKeyFromObject(expected.(client.Object))
 	assert.NoError(cli.Get(ctx, key, actual))
 	gvk := kinds.Identify(c.scheme, expected)
 	assert.NotEmpty(gvk.Kind, "Can't resolve expected value kind")
@@ -52,7 +52,6 @@ func (c *Comparator) AssertMatch(
 func NewComparator(scheme *runtime.Scheme) *Comparator {
 	return &Comparator{
 		typedAsserts: map[schema.GroupVersionKind]TypedAsserts{},
-		scheme: scheme,
+		scheme:       scheme,
 	}
 }
-

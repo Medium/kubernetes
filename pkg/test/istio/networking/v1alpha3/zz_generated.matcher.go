@@ -6,7 +6,7 @@ import (
 	assert "github.com/stretchr/testify/assert"
 	test "go.medium.engineering/kubernetes/pkg/test"
 	v1alpha3 "istio.io/client-go/pkg/apis/networking/v1alpha3"
-	runtime "k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
 func init() {

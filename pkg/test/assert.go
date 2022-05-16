@@ -2,17 +2,17 @@ package test
 
 import (
 	"context"
-	testify "github.com/stretchr/testify/assert"
-	"k8s.io/apimachinery/pkg/runtime"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 	"testing"
+
+	testify "github.com/stretchr/testify/assert"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 func AssertMatch(
 	ctx context.Context,
 	t *testing.T,
 	cli client.Client,
-	expected runtime.Object,
+	expected client.Object,
 	msgAndArgs ...interface{},
 ) {
 	DefaultComparator.AssertMatch(ctx, t, cli, expected, msgAndArgs...)
@@ -22,14 +22,13 @@ func AssertNotFound(
 	ctx context.Context,
 	t *testing.T,
 	cli client.Client,
-	unexpected runtime.Object,
+	unexpected client.Object,
 	msgAndArgs ...interface{},
 ) {
 	assert := testify.New(t)
-	actual := unexpected.DeepCopyObject()
-	key, err := client.ObjectKeyFromObject(unexpected)
-	assert.NoError(err, msgAndArgs...)
-	err = cli.Get(ctx, key, actual)
+	actual := unexpected.DeepCopyObject().(client.Object)
+	key := client.ObjectKeyFromObject(unexpected)
+	err := cli.Get(ctx, key, actual)
 	assert.Error(err, "Unexpected object found")
 }
 
@@ -37,7 +36,7 @@ func AssertAllMatch(
 	ctx context.Context,
 	t *testing.T,
 	cli client.Client,
-	expected []runtime.Object,
+	expected []client.Object,
 	msgAndArgs ...interface{},
 ) {
 	for _, e := range expected {

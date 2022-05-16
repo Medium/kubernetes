@@ -3,16 +3,17 @@ package test
 import (
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 var DefaultScheme = runtime.NewScheme()
 var DefaultComparator = NewComparator(DefaultScheme)
 
-func RegisterForType(obj runtime.Object, asserts TypedAsserts) {
+func RegisterForType(obj client.Object, asserts TypedAsserts) {
 	DefaultComparator.RegisterForType(obj, asserts)
 }
 
-func Assimilate_ObjectMeta(expected, actual meta.ObjectMeta) meta.ObjectMeta{
+func Assimilate_ObjectMeta(expected, actual meta.ObjectMeta) meta.ObjectMeta {
 	e := expected.DeepCopy()
 	e.UID = actual.UID
 	e.CreationTimestamp = actual.CreationTimestamp
@@ -24,7 +25,7 @@ func Assimilate_ObjectMeta(expected, actual meta.ObjectMeta) meta.ObjectMeta{
 	return *e
 }
 
-func Assimilate_TypeMeta(expected, actual meta.TypeMeta) meta.TypeMeta{
+func Assimilate_TypeMeta(expected, actual meta.TypeMeta) meta.TypeMeta {
 	if expected.Kind == "" && expected.APIVersion == "" {
 		return actual
 	}
