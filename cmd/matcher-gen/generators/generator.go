@@ -93,7 +93,7 @@ func (g *gen) Init(c *generator.Context, w io.Writer) error {
 		"comparator":           c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "Comparator"}),
 		"defaultComparator":    c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "DefaultComparator"}),
 		"defaultScheme":        c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "DefaultScheme"}),
-		"object":               c.Universe.Type(types.Name{Package: "sigs.k8s.io/controller-runtime/pkg/client", Name: "Object"}),
+		"object":               c.Universe.Type(types.Name{Package: "k8s.io/apimachinery/pkg/runtime", Name: "Object"}),
 		"assimilateObjectMeta": c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "Assimilate_ObjectMeta"}),
 		"assimilateTypeMeta":   c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "Assimilate_TypeMeta"}),
 		"typedAsserts":         c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "TypedAsserts"}),
