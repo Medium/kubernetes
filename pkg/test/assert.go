@@ -2,10 +2,11 @@ package test
 
 import (
 	"context"
+	"testing"
+
 	testify "github.com/stretchr/testify/assert"
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"testing"
 )
 
 func AssertMatch(
@@ -26,10 +27,9 @@ func AssertNotFound(
 	msgAndArgs ...interface{},
 ) {
 	assert := testify.New(t)
-	actual := unexpected.DeepCopyObject()
-	key, err := client.ObjectKeyFromObject(unexpected)
-	assert.NoError(err, msgAndArgs...)
-	err = cli.Get(ctx, key, actual)
+	actual := unexpected.DeepCopyObject().(runtime.Object)
+	key := client.ObjectKeyFromObject(unexpected.(client.Object))
+	err := cli.Get(ctx, key, actual.(client.Object))
 	assert.Error(err, "Unexpected object found")
 }
 

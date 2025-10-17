@@ -6,7 +6,7 @@ import (
 	assert "github.com/stretchr/testify/assert"
 	test "go.medium.engineering/kubernetes/pkg/test"
 	v1 "k8s.io/api/core/v1"
-	runtime "k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
 func init() {
@@ -50,15 +50,6 @@ func RegisterAsserts(comparator *test.Comparator) {
 		},
 		NoMatch: func(t *testing.T, a, b runtime.Object) {
 			NoMatch_Endpoints(t, a.(*v1.Endpoints), b.(*v1.Endpoints))
-		},
-	})
-
-	comparator.RegisterForType(&v1.EphemeralContainers{}, test.TypedAsserts{
-		Match: func(t *testing.T, a, b runtime.Object) {
-			Match_EphemeralContainers(t, a.(*v1.EphemeralContainers), b.(*v1.EphemeralContainers))
-		},
-		NoMatch: func(t *testing.T, a, b runtime.Object) {
-			NoMatch_EphemeralContainers(t, a.(*v1.EphemeralContainers), b.(*v1.EphemeralContainers))
 		},
 	})
 
@@ -272,25 +263,6 @@ func Match_Endpoints(t *testing.T, expected, actual *v1.Endpoints) {
 func NoMatch_Endpoints(t *testing.T, expected, actual *v1.Endpoints) {
 	assert := assert.New(t)
 	e := Assimilate_Endpoints(expected, actual)
-	assert.NotEqualValues(e, actual)
-}
-
-func Assimilate_EphemeralContainers(expected, actual *v1.EphemeralContainers) *v1.EphemeralContainers {
-	e := expected.DeepCopyObject().(*v1.EphemeralContainers)
-	e.ObjectMeta = test.Assimilate_ObjectMeta(e.ObjectMeta, actual.ObjectMeta)
-	e.TypeMeta = test.Assimilate_TypeMeta(e.TypeMeta, actual.TypeMeta)
-	return e
-}
-
-func Match_EphemeralContainers(t *testing.T, expected, actual *v1.EphemeralContainers) {
-	assert := assert.New(t)
-	e := Assimilate_EphemeralContainers(expected, actual)
-	assert.EqualValues(e, actual)
-}
-
-func NoMatch_EphemeralContainers(t *testing.T, expected, actual *v1.EphemeralContainers) {
-	assert := assert.New(t)
-	e := Assimilate_EphemeralContainers(expected, actual)
 	assert.NotEqualValues(e, actual)
 }
 

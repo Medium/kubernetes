@@ -2,18 +2,19 @@ package generators
 
 import (
 	"io"
+	"strings"
+
 	"k8s.io/gengo/generator"
 	"k8s.io/gengo/namer"
 	"k8s.io/gengo/types"
-	"strings"
 )
 
 type gen struct {
 	generator.DefaultGen
-	typesPackage string
+	typesPackage  string
 	outputPackage string
-	imports namer.ImportTracker
-	types []*types.Type
+	imports       namer.ImportTracker
+	types         []*types.Type
 }
 
 func NewGenerator(name, typesPackage, outputPackage string, types []*types.Type) generator.Generator {
@@ -21,17 +22,17 @@ func NewGenerator(name, typesPackage, outputPackage string, types []*types.Type)
 		DefaultGen: generator.DefaultGen{
 			OptionalName: name,
 		},
-		typesPackage: typesPackage,
+		typesPackage:  typesPackage,
 		outputPackage: outputPackage,
-		imports: generator.NewImportTracker(),
-		types: types,
+		imports:       generator.NewImportTracker(),
+		types:         types,
 	}
 }
 
 func matchFnNamer() *namer.NameStrategy {
 	return &namer.NameStrategy{
-		Prefix:              "Match_",
-		Join:                func(pre string, in []string, post string) string {
+		Prefix: "Match_",
+		Join: func(pre string, in []string, post string) string {
 			return pre + strings.Join(in, "_") + post
 		},
 	}
@@ -39,8 +40,8 @@ func matchFnNamer() *namer.NameStrategy {
 
 func noMatchFnNamer() *namer.NameStrategy {
 	return &namer.NameStrategy{
-		Prefix:              "NoMatch_",
-		Join:                func(pre string, in []string, post string) string {
+		Prefix: "NoMatch_",
+		Join: func(pre string, in []string, post string) string {
 			return pre + strings.Join(in, "_") + post
 		},
 	}
@@ -48,8 +49,8 @@ func noMatchFnNamer() *namer.NameStrategy {
 
 func assimilateFnNamer() *namer.NameStrategy {
 	return &namer.NameStrategy{
-		Prefix:              "Assimilate_",
-		Join:                func(pre string, in []string, post string) string {
+		Prefix: "Assimilate_",
+		Join: func(pre string, in []string, post string) string {
 			return pre + strings.Join(in, "_") + post
 		},
 	}
@@ -57,9 +58,9 @@ func assimilateFnNamer() *namer.NameStrategy {
 
 func (g *gen) Namers(_ *generator.Context) namer.NameSystems {
 	return namer.NameSystems{
-		"raw": namer.NewRawNamer(g.outputPackage, g.imports),
-		"matchFn": matchFnNamer(),
-		"noMatchFn": noMatchFnNamer(),
+		"raw":          namer.NewRawNamer(g.outputPackage, g.imports),
+		"matchFn":      matchFnNamer(),
+		"noMatchFn":    noMatchFnNamer(),
 		"assimilateFn": assimilateFnNamer(),
 	}
 }
@@ -87,16 +88,16 @@ func (g *gen) Init(c *generator.Context, w io.Writer) error {
 	sw := generator.NewSnippetWriter(w, c, "$", "$")
 
 	args := generator.Args{
-		"test": c.Universe.Type(types.Name{Package:"testing", Name:"T"}),
-		"testify": c.Universe.Type(types.Name{Package:"github.com/stretchr/testify/assert", Name:"New"}),
-		"comparator": c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "Comparator"}),
-		"defaultComparator": c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "DefaultComparator"}),
-		"defaultScheme": c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "DefaultScheme"}),
-		"object": c.Universe.Type(types.Name{Package: "k8s.io/apimachinery/pkg/runtime", Name: "Object"}),
+		"test":                 c.Universe.Type(types.Name{Package: "testing", Name: "T"}),
+		"testify":              c.Universe.Type(types.Name{Package: "github.com/stretchr/testify/assert", Name: "New"}),
+		"comparator":           c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "Comparator"}),
+		"defaultComparator":    c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "DefaultComparator"}),
+		"defaultScheme":        c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "DefaultScheme"}),
+		"object":               c.Universe.Type(types.Name{Package: "k8s.io/apimachinery/pkg/runtime", Name: "Object"}),
 		"assimilateObjectMeta": c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "Assimilate_ObjectMeta"}),
-		"assimilateTypeMeta": c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "Assimilate_TypeMeta"}),
-		"typedAsserts": c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "TypedAsserts"}),
-		"addToScheme": c.Universe.Type(types.Name{Package: g.typesPackage, Name: "AddToScheme"}),
+		"assimilateTypeMeta":   c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "Assimilate_TypeMeta"}),
+		"typedAsserts":         c.Universe.Type(types.Name{Package: "go.medium.engineering/kubernetes/pkg/test", Name: "TypedAsserts"}),
+		"addToScheme":          c.Universe.Type(types.Name{Package: g.typesPackage, Name: "AddToScheme"}),
 	}
 
 	sw.Do("func init() {\n", nil)
